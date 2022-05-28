@@ -119,18 +119,19 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   String? message;
   upload() async {
     final request = http.MultipartRequest(
-        "POST", Uri.parse("http://127.0.0.1:5000/upload"));
-    final headers = {"Content-type": "mulitipart/form-data"};
+        "POST",
+        Uri.parse(
+            "https://c40e-2409-4073-208e-374c-1969-55d-1c8c-d1e7.in.ngrok.io/upload"));
+    final headers = {"Content-type": "multipart/form-data"};
     request.files.add(http.MultipartFile("image",
         selectedImage!.readAsBytes().asStream(), selectedImage!.lengthSync(),
         filename: selectedImage!.path.split("/").last));
 
     request.headers.addAll(headers);
-    request.send();
     final response = await request.send();
 
     http.Response res = await http.Response.fromStream(response);
-    final resJson = jsonDecode(res.body);
+    final resJson = json.decode(json.encode(res.body));
     message = resJson["message"];
     setState(() {});
   }
@@ -138,7 +139,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: AppBar(title: Text(widget.imagePath)),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: Column(
@@ -151,14 +152,10 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   upload();
                 },
                 child: Text("Upload")),
-          )
+          ),
+          Text(message.toString())
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            upload();
-          },
-          child: Icon(Icons.upload)),
     );
   }
 }
