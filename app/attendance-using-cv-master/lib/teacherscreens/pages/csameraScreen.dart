@@ -4,7 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:attendance_using_cv/main.dart';
 import 'add_details_page.dart';
-
+import 'success.dart';
+import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -116,14 +117,12 @@ class DisplayPictureScreen extends StatefulWidget {
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   File? selectedImage;
-  String? message;
+  var message;
   upload() async {
     final request = http.MultipartRequest(
-        "POST",
-        Uri.parse(
-            "https://c40e-2409-4073-208e-374c-1969-55d-1c8c-d1e7.in.ngrok.io/upload"));
+        "POST", Uri.parse("https://828e-117-232-108-34.in.ngrok.io/upload"));
     final headers = {"Content-type": "multipart/form-data"};
-    request.files.add(http.MultipartFile("image",
+    request.files.add(http.MultipartFile('image',
         selectedImage!.readAsBytes().asStream(), selectedImage!.lengthSync(),
         filename: selectedImage!.path.split("/").last));
 
@@ -131,31 +130,55 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     final response = await request.send();
 
     http.Response res = await http.Response.fromStream(response);
-    final resJson = json.decode(json.encode(res.body));
-    message = resJson["message"];
-    setState(() {});
+
+    final resJson = json.decode(res.body);
+    message = resJson['message'];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.imagePath)),
+      appBar: AppBar(title: Text("Upload Image")),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Column(
-        children: [
-          Image.file(File(widget.imagePath)),
-          Center(
-            child: ElevatedButton(
-                onPressed: () {
-                  selectedImage = File(widget.imagePath);
-                  upload();
-                },
-                child: Text("Upload")),
-          ),
-          Text(message.toString())
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.file(File(widget.imagePath)),
+            Text(message.toString())
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          selectedImage = File(widget.imagePath);
+          upload();
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => Success(
+                  present: 1 //here message gives the number of students present
+                  ),
+            ),
+          );
+        },
+        child: Icon(Icons.upload),
       ),
     );
+  }
+}
+
+class DownloadCSV extends StatefulWidget {
+  const DownloadCSV({Key? key}) : super(key: key);
+
+  @override
+  State<DownloadCSV> createState() => _DownloadCSVState();
+}
+
+class _DownloadCSVState extends State<DownloadCSV> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

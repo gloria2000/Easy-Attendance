@@ -4,6 +4,7 @@ import 'package:attendance_using_cv/teacherscreens/pages/csameraScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:attendance_using_cv/main.dart';
+// import 'package:date_time_picker/date_time_picker.dart';
 
 class AddDetailsPage extends StatefulWidget {
   const AddDetailsPage({
@@ -18,6 +19,10 @@ class AddDetailsPage extends StatefulWidget {
 }
 
 class _AddDetailsPageState extends State<AddDetailsPage> {
+  late DateTime selectedDate;
+  late int noOfHours;
+  late String classAndSection;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
