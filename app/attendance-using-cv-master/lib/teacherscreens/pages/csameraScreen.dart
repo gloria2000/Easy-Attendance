@@ -120,7 +120,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   var message;
   upload() async {
     final request = http.MultipartRequest(
-        "POST", Uri.parse("https://828e-117-232-108-34.in.ngrok.io/upload"));
+        "POST", Uri.parse("https://3881-117-232-108-34.in.ngrok.io/upload"));
     final headers = {"Content-type": "multipart/form-data"};
     request.files.add(http.MultipartFile('image',
         selectedImage!.readAsBytes().asStream(), selectedImage!.lengthSync(),

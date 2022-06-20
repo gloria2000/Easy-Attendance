@@ -94,7 +94,7 @@ class _SuccessState extends State<Success> {
                   deleteOnCancel: true,
                 );
                 core = await Flowder.download(
-                  "https://3814-117-232-108-34.in.ngrok.io/AttendanceList.csv",
+                  "https://3881-117-232-108-34.in.ngrok.io/download",
                   options,
                 );
               },
