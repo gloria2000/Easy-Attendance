@@ -39,6 +39,3 @@ def recogniseFace(imagePath):
         add_to_csv.append("Absent")
   markAttendance(add_to_csv)
   return ans
-
-  markAttendance()
-  return ans

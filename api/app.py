@@ -1,10 +1,54 @@
 from distutils.log import debug
 from email import message
+from fileinput import filename
 from attendance import recogniseFace
-from flask import Flask , request, jsonify
+from flask import Flask , request, jsonify , current_app, send_from_directory,send_file
 import werkzeug
+import os
 
 app = Flask(__name__)
+
+
+@app.route("/upload",methods = ["POST"])
+def upload():
+    if (request.method =="POST"):
+        imagefile = request.files['image']
+        filename = werkzeug.utils.secure_filename(imagefile.filename)
+        imagefile.save("./uploaded/" + filename)
+        present_students = recogniseFace("./uploaded/" + filename)  
+    students = len(present_students)
+
+    return {
+        'message' : str(students)
+        }
+        
+
+@app.route('/download')
+def downloadFile ():
+    path = "AttendanceList.csv"
+    return send_file(path, as_attachment=True)
+
+if __name__ == "__main__":
+    app.run(debug = True, port=5000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///User.sqlite3'
@@ -27,21 +71,3 @@ app = Flask(__name__)
 # 		self.date = date
 # 		self.hour = hour
 #         #self.attendance = attendance
-
-@app.route("/upload",methods = ["POST"])
-def upload():
-    if (request.method =="POST"):
-        imagefile = request.files['image']
-        filename = werkzeug.utils.secure_filename(imagefile.filename)
-        imagefile.save("./uploaded/" + filename)
-        present_students = recogniseFace("./uploaded/" + filename)  
-    students = len(present_students)
-    # new_data = AddAttendance(name, email)
-    # db.session.add(new_data)
-    # db.session.commit()
-    return {
-        'message' : str(students)
-        }
-        
-if __name__ == "__main__":
-    app.run(debug = True, port=5000)
