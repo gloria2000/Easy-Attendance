@@ -1,6 +1,7 @@
 import cv2
 import pickle
 import numpy as np
+import pandas as pd
 from keras_facenet import FaceNet
 from face_recognition import FaceRecognition
 from csv import reader
@@ -19,6 +20,13 @@ def markAttendance(list_to_append):
          writer_ = writer(File)
          writer_.writerow(list_to_append)
          File.close()
+
+def convertToExcel():
+  df_new = pd.read_csv('AttendanceList.csv')
+  # saving xlsx file
+  GFG = pd.ExcelWriter('AttendanceList.xlsx')
+  df_new.to_excel(GFG, index=False)
+  GFG.save()
 
 def recogniseFace(imagePath):
   present_students = list()

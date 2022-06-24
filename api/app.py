@@ -1,8 +1,9 @@
+from contextlib import _RedirectStream
 from distutils.log import debug
 from email import message
 from fileinput import filename
-from attendance import recogniseFace
-from flask import Flask , request, jsonify , current_app, send_from_directory,send_file
+from attendance import convertToExcel, recogniseFace
+from flask import Flask , request, jsonify , current_app, send_from_directory,send_file, redirect
 import werkzeug
 import os
 
@@ -23,10 +24,22 @@ def upload():
         }
         
 
+# @app.route('/download', methods=['GET'])
+# def download_redirect():
+#     redirect('/download/AttendanceList.xlsx')
+
+# @app.route('/download/<filename>', methods=['GET'])
+# def download(filename):
+#     send_file(filename,
+#              as_attachment=True,
+#              mimetype='application/vnd.ms-excel',
+#              attachment_filename="AttendanceList.xlsx")
+
 @app.route('/download')
 def downloadFile ():
-    path = "AttendanceList.csv"
-    return send_file(path, as_attachment=True)
+     #convertToExcel()
+     path = "hehe.pdf"
+     return send_file(path, attachment_filename = "Attendance.xlsx")
 
 if __name__ == "__main__":
     app.run(debug = True, port=5000)
