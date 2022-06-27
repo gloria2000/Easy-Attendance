@@ -9,7 +9,11 @@ import 'package:open_file/open_file.dart';
 
 class Success extends StatefulWidget {
   final int present;
-  const Success({Key? key, required this.present}) : super(key: key);
+
+  const Success({
+    Key? key,
+    required this.present,
+  }) : super(key: key);
 
   @override
   State<Success> createState() => _SuccessState();
@@ -94,11 +98,11 @@ class _SuccessState extends State<Success> {
                   deleteOnCancel: true,
                 );
                 core = await Flowder.download(
-                  "https://3881-117-232-108-34.in.ngrok.io/download",
+                  "https://558c-2402-3a80-1e19-bd09-c87d-6b21-5d9a-4d4b.ap.ngrok.io/download",
                   options,
                 );
               },
-              child: Text("Download Attendance (.xls)"))
+              child: Text("Download Attendance (.xlsx)"))
         ]),
         Positioned(
             child: GestureDetector(

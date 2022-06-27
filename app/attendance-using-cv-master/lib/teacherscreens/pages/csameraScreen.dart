@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'package:attendance_using_cv/teacherscreens/pages/absentee_list_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:attendance_using_cv/main.dart';
@@ -117,10 +119,20 @@ class DisplayPictureScreen extends StatefulWidget {
 
 class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   File? selectedImage;
-  var message;
+  int status_Code = 0;
+  bool isLoading = false;
+
+  late String attendance;
+  late String countAbsent;
+  //function to upload image to the server
   upload() async {
+    setState(() {
+      isLoading = true;
+    });
     final request = http.MultipartRequest(
-        "POST", Uri.parse("https://3881-117-232-108-34.in.ngrok.io/upload"));
+        "POST",
+        Uri.parse(
+            "https://558c-2402-3a80-1e19-bd09-c87d-6b21-5d9a-4d4b.ap.ngrok.io/upload"));
     final headers = {"Content-type": "multipart/form-data"};
     request.files.add(http.MultipartFile('image',
         selectedImage!.readAsBytes().asStream(), selectedImage!.lengthSync(),
@@ -130,22 +142,49 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     final response = await request.send();
 
     http.Response res = await http.Response.fromStream(response);
-
+    setState(() {
+      if (res.statusCode == 200) {
+        status_Code = 200;
+        isLoading = false;
+      }
+    });
     final resJson = json.decode(res.body);
-    message = resJson['message'];
+    log(resJson['attendance']);
+    attendance = resJson['attendance'];
+    countAbsent = resJson['countAbsent'];
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AbsenteeListPage(
+          attendance: attendance.toString(),
+          countAbsent: countAbsent,
+          //here message gives the number of students present
+        ),
+      ),
+    );
+    // return resJson['attendance'];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Upload Image")),
+      appBar: AppBar(
+        title: Text("Upload Image"),
+        backgroundColor: Color(0xCCB958A5),
+      ),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: SingleChildScrollView(
         child: Column(
           children: [
             Image.file(File(widget.imagePath)),
-            Text(message.toString())
+            Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.transparent,
+                color: Colors.blue,
+              ),
+            )
           ],
         ),
       ),
@@ -153,32 +192,9 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         onPressed: () {
           selectedImage = File(widget.imagePath);
           upload();
-          Navigator.pop(context);
-          Navigator.pop(context);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => Success(
-                  present: 1 //here message gives the number of students present
-                  ),
-            ),
-          );
         },
         child: Icon(Icons.upload),
       ),
     );
-  }
-}
-
-class DownloadCSV extends StatefulWidget {
-  const DownloadCSV({Key? key}) : super(key: key);
-
-  @override
-  State<DownloadCSV> createState() => _DownloadCSVState();
-}
-
-class _DownloadCSVState extends State<DownloadCSV> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }

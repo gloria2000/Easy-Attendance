@@ -3,6 +3,7 @@
 import 'package:attendance_using_cv/teacherscreens/pages/csameraScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:attendance_using_cv/main.dart';
 // import 'package:date_time_picker/date_time_picker.dart';
 
@@ -58,13 +59,18 @@ class _AddDetailsPageState extends State<AddDetailsPage> {
               );
             },
             child: TakeAttendanceButton(),
-            // TakeAttendanceButton(() {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => (TakePictureScreen(
-            //               camera: widget.camera,
-            //             ))),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => (TakePictureScreen(
+                          camera: widget.camera,
+                        ))),
+              );
+            },
+            child: TakeAttendanceButton(),
           )
         ]),
       ),
