@@ -6,7 +6,7 @@ from keras_facenet import FaceNet
 from face_recognition import FaceRecognition
 from csv import reader
 from csv import writer
-import datetime
+from datetime import date
 # Load the cascade
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 fr = FaceRecognition()
@@ -31,7 +31,7 @@ def convertToExcel():
 def recogniseFace(imagePath):
   present_students = list()
   ans = []
-  add_to_csv = ['03-06-2022']
+  add_to_csv = [str(date.today())]
   result = fr.predict(imagePath)
   #find the result of predictions in list format
   for predicted_values in result["predictions"]:
@@ -42,8 +42,8 @@ def recogniseFace(imagePath):
         ans.append(person)
   for person in Student_list:
     if person in ans:
-        add_to_csv.append("Present")
+        add_to_csv.append("1")
     else:
-        add_to_csv.append("Absent")
+        add_to_csv.append("0")
   markAttendance(add_to_csv)
-  return ans
+  return add_to_csv
